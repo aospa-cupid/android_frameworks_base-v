@@ -6335,6 +6335,21 @@ public final class Settings {
         public static final String ADAPTIVE_PLAYBACK_ENABLED = "adaptive_playback_enabled";
 
         /**
+         * Three Finger Gesture from Oppo
+         * @hide
+         */
+        @Readable
+        public static final String THREE_FINGER_GESTURE = "three_finger_gesture";
+
+        /**
+         * Three Finger Gesture - flag for activation
+         * NOT for backup!
+         * @hide
+         */
+        @Readable
+        public static final String THREE_FINGER_GESTURE_ACTIVE = "three_finger_gesture_active";
+
+        /**
          * Adaptive playback's timeout in ms
          * @hide
          */
