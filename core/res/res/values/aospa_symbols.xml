@@ -116,4 +116,6 @@
          Should be set to dt2w max time / 2 when needed -->
     <java-symbol type="integer" name="config_singleTapDelay" />
 
+    <!-- Power menu -->
+    <java-symbol type="array" name="config_restartActionsList" />
 </resources>
