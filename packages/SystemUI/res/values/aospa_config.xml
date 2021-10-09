@@ -15,6 +15,7 @@
 
     <!-- Color of the UDFPS pressed view -->
     <color name="config_udfpsColor">#ffffffff</color>
+
     <!-- Whether usage of the proximity sensor during doze is supported -->
     <bool name="doze_proximity_sensor_supported">true</bool>
 
@@ -29,5 +30,11 @@
 
     <!-- Whether long press is required to activate keyguard quick affordance buttons -->
     <bool name="config_keyguardQuickAffordanceRequiresLongPress">true</bool>
+
+    <!-- Whether to enable burn-in protection for statusbar and navbar -->
+    <bool name="config_statusBarBurnInProtection">@*android:bool/config_enableBurnInProtection</bool>
+
+    <!-- Interval between subsequent shifting of statusbar and navbar contents, in seconds -->
+    <integer name="config_statusBarBurnInProtectionShiftInterval">60</integer>
 
 </resources>
