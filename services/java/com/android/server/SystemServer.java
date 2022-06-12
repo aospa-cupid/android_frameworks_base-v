@@ -292,6 +292,7 @@ import com.android.server.wm.ActivityTaskManagerService;
 import com.android.server.wm.WindowManagerGlobalLock;
 import com.android.server.wm.WindowManagerService;
 import com.android.server.lineage.health.HealthInterfaceService;
+import com.android.server.lineage.LineageGlobalActionsService;
 
 import dalvik.system.VMRuntime;
 import dalvik.system.PathClassLoader;
@@ -1744,6 +1745,10 @@ public final class SystemServer implements Dumpable {
 
             t.traceBegin("StartSmart5gService");
             mSystemServiceManager.startService(Smart5gService.class);
+            t.traceEnd();
+
+            t.traceBegin("LineageGlobalActionsService");
+            mSystemServiceManager.startService(LineageGlobalActionsService.class);
             t.traceEnd();
 
         } catch (Throwable e) {

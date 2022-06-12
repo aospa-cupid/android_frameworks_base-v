@@ -12939,6 +12939,12 @@ public final class Settings {
         public static final String NAVIGATION_BAR_HINT = "navigation_bar_hint";
 
         /**
+          * String to contain power menu actions
+          * @hide
+          */
+         public static final String POWER_MENU_ACTIONS = "power_menu_actions";
+
+        /**
          * These entries are considered common between the personal and the managed profile,
          * since the managed profile doesn't get to change them.
          */
