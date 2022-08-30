@@ -51,6 +51,8 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.os.Trace;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.provider.Settings;
 import android.util.AttributeSet;
 import android.util.IndentingPrintWriter;
@@ -169,6 +171,11 @@ public class NotificationStackScrollLayout
     private boolean mKeyguardBypassEnabled;
 
     private final ExpandHelper mExpandHelper;
+
+    private static final VibrationEffect EFFECT_CLICK =
+            VibrationEffect.createPredefined(VibrationEffect.EFFECT_CLICK);
+    private final Vibrator mVibrator;
+
     private NotificationSwipeHelper mSwipeHelper;
     private int mCurrentStackHeight = Integer.MAX_VALUE;
     private boolean mHighPriorityBeforeSpeedBump;
@@ -666,6 +673,7 @@ public class NotificationStackScrollLayout
         mGroupExpansionManager = Dependency.get(GroupExpansionManager.class);
         setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_YES);
         setWindowInsetsAnimationCallback(mInsetsCallback);
+	mVibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
     }
 
     /**
@@ -4577,6 +4585,7 @@ public class NotificationStackScrollLayout
                 if (mFooterClearAllListener != null) {
                     mFooterClearAllListener.onClearAll();
                 }
+                mVibrator.vibrate(EFFECT_CLICK);
                 clearNotifications(ROWS_ALL, true /* closeShade */);
                 footerView.setClearAllButtonVisible(false /* visible */, true /* animate */);
             });
