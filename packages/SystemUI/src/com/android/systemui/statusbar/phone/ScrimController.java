@@ -1767,6 +1767,11 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, Dump
             mIsLandscape ? View.GONE : View.VISIBLE);
     }
 
+    private void updateNotificationScrimVisibility() {
+        if (mNotificationsScrim == null) return;
+        mNotificationsScrim.setVisibility(mIsLandscape ? View.GONE : View.VISIBLE);
+    }
+
     public interface Callback {
         default void onStart() {
         }
