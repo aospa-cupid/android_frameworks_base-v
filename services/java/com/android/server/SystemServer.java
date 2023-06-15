@@ -1740,6 +1740,10 @@ public final class SystemServer implements Dumpable {
 
             t.traceBegin("StartPowerOffAlarmService");
             mSystemServiceManager.startService(PowerOffAlarmService.class);
+
+            t.traceBegin("StartSmart5gService");
+            mSystemServiceManager.startService(Smart5gService.class);
+
             t.traceEnd();
 
         } catch (Throwable e) {
