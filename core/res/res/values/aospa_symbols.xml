@@ -122,6 +122,7 @@
     <java-symbol type="integer" name="config_singleTapDelay" />
 
     <!-- PropImitationHooks -->
+    <java-symbol type="array" name="config_certifiedKeybox" />
     <java-symbol type="raw" name="certified_build_props" />
     <java-symbol type="string" name="config_stockFingerprint" />
     <java-symbol type="string" name="config_netflixSpoofModel" />
