@@ -16,7 +16,6 @@
 
 package com.android.systemui.qs;
 
-import static android.provider.Settings.Global.MULTI_SIM_DATA_CALL_SUBSCRIPTION;
 import static android.provider.Settings.Secure.QS_TILES;
 
 import android.content.BroadcastReceiver;
@@ -25,16 +24,14 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.ContentObserver;
+import android.net.ConnectivityManager;
+import android.net.NetworkScoreManager;
 import android.net.wifi.WifiManager;
-import android.os.Handler;
-import android.telephony.SubscriptionManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.plugins.FalsingManager;
 import com.android.systemui.qs.dagger.QSScope;
@@ -43,10 +40,8 @@ import com.android.systemui.retail.domain.interactor.RetailModeInteractor;
 import com.android.systemui.settings.UserTracker;
 import com.android.systemui.statusbar.connectivity.NetworkController;
 import com.android.systemui.statusbar.connectivity.SignalCallback;
-import com.android.systemui.statusbar.connectivity.WifiStatusTrackerFactory;
 import com.android.systemui.tuner.TunerService;
 import com.android.systemui.util.ViewController;
-import com.android.systemui.util.settings.GlobalSettings;
 
 import com.android.settingslib.wifi.WifiStatusTracker;
 
@@ -71,8 +66,6 @@ public class QSFooterViewController extends ViewController<QSFooterView>
     private final NetworkController mNetworkController;
     private final Context mContext;
     private final TunerService mTunerService;
-    private final GlobalSettings mGlobalSettings;
-    private final SubscriptionManager mSubManager;
 
     private static final String INTERNET_TILE = "internet";
 
@@ -88,14 +81,7 @@ public class QSFooterViewController extends ViewController<QSFooterView>
         @Override
         public void setNoSims(boolean show, boolean simDetected) {
             mView.setNoSims(show);
-        }
-    };
-
-    private final ContentObserver mDataSwitchObserver = new ContentObserver(new Handler()) {
-        @Override
-        public void onChange(boolean selfChange) {
-            onDefaultDataSimChanged();
-        }
+         }
     };
 
     @Inject
@@ -106,10 +92,8 @@ public class QSFooterViewController extends ViewController<QSFooterView>
             QSPanelController qsPanelController,
             RetailModeInteractor retailModeInteractor,
             NetworkController networkController,
-            WifiStatusTrackerFactory trackerFactory,
             Context context,
-            TunerService tunerService,
-            GlobalSettings globalSettings
+            TunerService tunerService) {
     ) {
         super(view);
         mUserTracker = userTracker;
@@ -121,11 +105,12 @@ public class QSFooterViewController extends ViewController<QSFooterView>
         mNetworkController = networkController;
         mContext = context;
         mTunerService = tunerService;
-        mGlobalSettings = globalSettings;
-        mSubManager = context.getSystemService(SubscriptionManager.class);
-        mWifiTracker = trackerFactory.createTracker(this::onWifiStatusUpdated, null);
         mPageIndicator = mView.findViewById(R.id.footer_page_indicator);
         mEditButton = mView.findViewById(android.R.id.edit);
+        mWifiTracker = new WifiStatusTracker(context, context.getSystemService(WifiManager.class),
+                context.getSystemService(NetworkScoreManager.class),
+                context.getSystemService(ConnectivityManager.class),
+                        this::onWifiStatusUpdated);
     }
 
     @Override
@@ -145,14 +130,9 @@ public class QSFooterViewController extends ViewController<QSFooterView>
         mContext.registerReceiver(mReceiver, filter);
         mWifiTracker.fetchInitialState();
         mWifiTracker.setListening(true);
+        onWifiStatusUpdated();
         mNetworkController.addCallback(mSignalCallback);
         mTunerService.addTunable(this, QS_TILES);
-        mGlobalSettings.registerContentObserver(MULTI_SIM_DATA_CALL_SUBSCRIPTION,
-                mDataSwitchObserver);
-
-        // set initial values
-        onWifiStatusUpdated();
-        onDefaultDataSimChanged();
     }
 
     @Override
@@ -160,7 +140,6 @@ public class QSFooterViewController extends ViewController<QSFooterView>
         mContext.unregisterReceiver(mReceiver);
         mNetworkController.removeCallback(mSignalCallback);
         mTunerService.removeTunable(this);
-        mGlobalSettings.unregisterContentObserver(mDataSwitchObserver);
     }
 
     @Override
@@ -209,10 +188,5 @@ public class QSFooterViewController extends ViewController<QSFooterView>
     private void onWifiStatusUpdated() {
         mView.setIsWifiConnected(mWifiTracker.connected);
         mView.setWifiSsid(mWifiTracker.ssid);
-    }
-
-    private void onDefaultDataSimChanged() {
-        int subId = mSubManager.getDefaultDataSubscriptionId();
-        mView.setCurrentDataSubId(subId);
     }
 }
