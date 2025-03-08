@@ -720,7 +720,7 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces {
             ActivityStarter activityStarter,
             BrightnessMirrorShowingInteractor brightnessMirrorShowingInteractor,
             GlanceableHubContainerController glanceableHubContainerController,
-            EmergencyGestureIntentFactory emergencyGestureIntentFactory
+            EmergencyGestureIntentFactory emergencyGestureIntentFactory,
             BurnInProtectionController burnInProtectionController
     ) {
         mContext = context;
