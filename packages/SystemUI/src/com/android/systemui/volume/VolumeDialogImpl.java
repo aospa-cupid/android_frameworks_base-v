@@ -2899,12 +2899,9 @@ public class VolumeDialogImpl implements VolumeDialog, Dumpable,
         @Override
         public boolean onTouchEvent(@NonNull MotionEvent event) {
             if (mShowing) {
-                switch(event.getAction()){
-                    case MotionEvent.ACTION_OUTSIDE:
-                    case MotionEvent.ACTION_DOWN:
-                        // Touches inside won't trigger onTouchEvent
-                        dismissH(Events.DISMISS_REASON_TOUCH_OUTSIDE);
-                        return false;
+                if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
+                    dismissH(Events.DISMISS_REASON_TOUCH_OUTSIDE);
+                    return true;
                 }
             }
             return false;
