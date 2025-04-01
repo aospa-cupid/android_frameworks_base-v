@@ -120,7 +120,6 @@
                         android:contentDescription="@string/accessibility_volume_settings"
                         android:scaleType="centerInside"
                         android:soundEffectsEnabled="false"
-                        android:src="@drawable/horizontal_ellipsis"
                         android:tint="?androidprv:attr/colorAccent" />
                 </FrameLayout>
                 <FrameLayout
